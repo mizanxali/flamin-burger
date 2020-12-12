@@ -19,22 +19,6 @@ const Burger = (props) => {
         transformedIngredients = <p>Please start adding ingredients.</p>
     }
 
-    /* REFERENCE - Object.keys()
-    const object1 = {
-        a: 'somestring',
-        b: 42,
-        c: false
-      };
-    console.log(Object.keys(object1));
-    expected output: Array ["a", "b", "c"]
-
-    REFERENCE - array.map()
-    const array1 = [1, 4, 9, 16];
-    pass a function to map
-    const map1 = array1.map(x => x * 2);
-    console.log(map1);
-    expected output: Array [2, 8, 18, 32] */
-
     return (
         <div className="Burger">
             <BurgerIngredient type={'breadtop'} />
