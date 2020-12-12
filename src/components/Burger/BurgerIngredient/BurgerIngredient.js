@@ -4,10 +4,6 @@ import { render } from 'react-dom';
 import './BurgerIngredient.css'
 
 class BurgerIngredient extends Component {
-    // constructor() {
-    //     super(props);
-    // }
-
     render() {
         let ingredient = null;
 
