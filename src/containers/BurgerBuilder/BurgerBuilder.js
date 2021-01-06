@@ -4,6 +4,8 @@ import Aux from '../../hoc/Auxiliary/Auxiliary'
 import BuildControls from '../../components/Burger/BuildControls/BuildControls'
 import Modal from '../../components/UI/Modal/Modal'
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import router from '../../axios-orders';
 
 const INGREDIENT_PRICES = {
     lettuce: 1.99,
@@ -24,7 +26,8 @@ class BurgerBuilder extends Component {
             },
             totalAmount: 2.49,
             purchaseable: false,
-            purchasing: false
+            purchasing: false,
+            isLoading: false
         };
     }
 
@@ -83,7 +86,34 @@ class BurgerBuilder extends Component {
     }
 
     purchaseConfirmedHandler = () => {
-        alert('OK');
+        // alert('OK');
+        this.setState({isLoading: true});
+        const finalOrder = {
+            ingredients: this.state.ingredients,
+            totalAmount: this.state.totalAmount,
+            customer: {
+                name: 'Mizan',
+                address: {
+                    street: '221B Baker Street',
+                    zipcode: '401107',
+                    country: 'India'
+                },
+                phoneNumber: '1234567',
+                email: 'johndoe@example.com'
+            }
+        }
+        //send the finalOrder object to our Firebase database
+        router.post('/orders.json', finalOrder)
+        .then(res => {
+            console.log(res);
+            this.setState({isLoading: false});
+            this.setState({purchasing: false});
+        })
+        .catch(err => {
+            console.log(err);
+            this.setState({isLoading: false});
+            this.setState({purchasing: false});
+        });
     }
 
     render() {
@@ -94,10 +124,16 @@ class BurgerBuilder extends Component {
             disabledInfo[i] = disabledInfo[i] <= 0 //returns boolean and overwrites the numeric value
         }
 
+        let modalContent = <OrderSummary grandTotal={this.state.totalAmount} ingredients={this.state.ingredients} purchaseCanceled={this.purchaseCanceledHandler} purchaseConfirmed={this.purchaseConfirmedHandler} />
+
+        if(this.state.isLoading) {
+            modalContent = <Spinner />
+        }
+
         return (
             <Aux>
                 <Modal show={this.state.purchasing} modalClosed={this.purchaseCanceledHandler}>
-                    <OrderSummary grandTotal={this.state.totalAmount} ingredients={this.state.ingredients} purchaseCanceled={this.purchaseCanceledHandler} purchaseConfirmed={this.purchaseConfirmedHandler} />
+                    {modalContent}
                 </Modal>
                 <Burger ingredients={this.state.ingredients}></Burger>
                 <BuildControls
