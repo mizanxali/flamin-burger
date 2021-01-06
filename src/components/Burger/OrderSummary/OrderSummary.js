@@ -11,8 +11,8 @@ const OrderSummary = (props) => {
 
     return (
         <Aux>
-            <h1>Your Burger</h1>
-            <ul>
+            <h1 style={{margin: 'auto'}}>Your Burger</h1>
+            <ul style={{listStyleType: 'none', padding: '0'}}>
                 {ingredientSummary}
             </ul>
             <h2>Grand total: ${props.grandTotal.toFixed(2)}</h2>
