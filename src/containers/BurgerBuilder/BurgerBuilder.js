@@ -24,7 +24,6 @@ class BurgerBuilder extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props);
         router.get('https://burger-king-ed0a0-default-rtdb.firebaseio.com/ingredients.json')
         .then(res => {
             this.setState({ingredients: res.data});
@@ -95,38 +94,14 @@ class BurgerBuilder extends Component {
 
     purchaseConfirmedHandler = () => {
         // alert('OK');
-        // this.setState({isLoading: true});
-        // const finalOrder = {
-        //     ingredients: this.state.ingredients,
-        //     totalAmount: this.state.totalAmount,
-        //     customer: {
-        //         name: 'Mizan',
-        //         address: {
-        //             street: '221B Baker Street',
-        //             zipcode: '401107',
-        //             country: 'India'
-        //         },
-        //         phoneNumber: '1234567',
-        //         email: 'johndoe@example.com'
-        //     }
-        // }
-        // //send the finalOrder object to our Firebase database
-        // router.post('/orders.json', finalOrder)
-        // .then(res => {
-        //     console.log(res);
-        //     this.setState({isLoading: false});
-        //     this.setState({purchasing: false});
-        // })
-        // .catch(err => {
-        //     console.log(err);
-        //     this.setState({isLoading: false});
-        //     this.setState({purchasing: false});
-        // });
+
         const queryParams = [];
 
         for (let item in this.state.ingredients) {
             queryParams.push(encodeURIComponent(item) + '=' + encodeURIComponent(this.state.ingredients[item]));
         }
+        
+        queryParams.push('totalAmount=' + this.state.totalAmount);
 
         this.props.history.push({
             pathname: '/checkout',

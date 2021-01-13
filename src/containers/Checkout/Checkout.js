@@ -1,24 +1,29 @@
 import React, { Component } from 'react'
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary'
+import { Route } from 'react-router-dom'
+import CustomerData from './CustomerData/CustomerData'
 
 class Checkout extends Component {
     state = {
-        ingredients: {
-            cheese: 1,
-            lettuce: 1,
-            meat: 1,
-            tomato: 1
-        }
+        ingredients: null,
+        totalAmount: 0
     }
 
-    componentDidMount() {
+    componentWillMount() {
+        console.log(this.props);
         const queryParams = new URLSearchParams(this.props.location.search);
-        const ingredients = {};
+        let ingredients = {};
+        let totalAmount = null;
         for (let param of queryParams.entries()) {
             //param = ['ingredient-name', 'quantity']
-            ingredients[param[0]] = +param[1];
+            if(param[0]==='totalAmount') {
+                totalAmount = param[1];
+            }
+            else {
+                ingredients[param[0]] = +param[1];
+            }
         }
-        this.setState({ingredients: ingredients});
+        this.setState({ingredients: ingredients, totalAmount: totalAmount});
     }
 
     checkoutCanceledHandler = () => {
@@ -26,13 +31,14 @@ class Checkout extends Component {
     }
 
     checkoutConfirmedHandler = () => {
-        this.props.history.replace('checkout/customer-data');
+        this.props.history.replace('checkout/cust-data');
     }
     
     render() {
         return(
             <div>
                 <CheckoutSummary ingredients={this.state.ingredients} checkoutCanceled={this.checkoutCanceledHandler} checkoutConfirmed={this.checkoutConfirmedHandler} />
+                <Route path={this.props.match.url + '/cust-data'} render={() => (<CustomerData ingredients={this.state.ingredients} totalAmount={this.state.totalAmount} />)} />
             </div>
         )
     }
