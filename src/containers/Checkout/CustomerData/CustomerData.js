@@ -1,37 +1,70 @@
 import React, { Component } from 'react'
 import Button from '../../../components/UI/Button/Button'
 import './CustomerData.css'
-import router from '../../../axios-orders';
+import router from '../../../axios-orders'
 import Spinner from '../../../components/UI/Spinner/Spinner'
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router'
+import Input from '../../../components/UI/Input/Input'
 
 class CustomerData extends Component {
     state = {
-        name: 'John Doe',
-        address: {
-            street: '221B Baker Street, London',
-            zipcode: '401107'
+        orderForm: {
+            name: {
+                label: 'Name',
+                value: '',
+                elementConfig: {
+                    type: "text",
+                    placeholder: "Sherlock Holmes"
+                }
+            },
+            phoneNumber: {
+                label: 'Phone Number',
+                value: '',
+                elementConfig: {
+                    type: "text",
+                    placeholder: "1234567"
+                }
+            },
+            email: {
+                label: 'Email',
+                value: '',
+                elementConfig: {
+                    type: "text",
+                    placeholder: "sh@thescienceofdeduction.com"
+                }
+            },
+            
+            street: {
+                label: 'Street Address',
+                value: '',
+                elementConfig: {
+                    type: "text",
+                    placeholder: "221B Baker Street, London"
+                }
+            },
+            zipcode: {
+                label: 'Zip Code',
+                value: '',
+                elementConfig: {
+                    type: "text",
+                    placeholder: "NW1"
+                }
+            }
         },
-        phoneNumber: '1234567',
-        email: 'johndoe@example.com',
         isLoading: false
     }
 
     orderHandler = (event) => {
         event.preventDefault(); //to stop button from reloading the page on being clicked
         this.setState({isLoading: true});
+        const customerData = {}
+        for(let key in this.state.orderForm) {
+            customerData[key] = this.state.orderForm[key].value
+        }
         const finalOrder = {
             ingredients: this.props.ingredients,
             totalAmount: this.props.totalAmount,
-            customer: {
-                name: 'Mizan',
-                address: {
-                    street: '221B Baker Street',
-                    zipcode: '401107'
-                },
-                phoneNumber: '1234567',
-                email: 'johndoe@example.com'
-            }
+            customerData: customerData
         }
         //send the finalOrder object to our Firebase database
         router.post('/orders.json', finalOrder)
@@ -46,21 +79,36 @@ class CustomerData extends Component {
         });
     }
 
+    inputChangedHandler = (event, inputElement) => {
+        const updatedOrderForm = {
+            ...this.state.orderForm
+        }
+        const updatedOrderFormElement = {
+            ...updatedOrderForm[inputElement]
+        }
+        updatedOrderFormElement.value = event.target.value
+        updatedOrderForm[inputElement] = updatedOrderFormElement
+        this.setState({
+            orderForm: updatedOrderForm
+        })
+    }
+
     render() {
+        const formElementsArray = []
+
+        for(let key in this.state.orderForm) {
+            formElementsArray.push({
+                id: key,
+                setup: this.state.orderForm[key]
+            })
+        }
         let form = (
-            <form>
-                    <label htmlFor='name'>Name</label>
-                    <input id='name' type='text' name='name' placeholder='John Doe' />
-                    <label htmlFor='email'>Email</label>
-                    <input id='email' type='email' name='email' placeholder='johndoe@example.com' />
-                    <label htmlFor='phoneNumber'>Phone Number</label>
-                    <input id='phoneNumber' type='text' name='phoneNumber' placeholder='1234567' />
-                    <label htmlFor='street'>Street Address</label>
-                    <input id='street' type='text' name='street' placeholder='221B Baker Street' />
-                    <label htmlFor='zipcode'>Zip Code</label>
-                    <input id='zipcode' type='text' name='zipcode' placeholder='401107' />
-                    <Button buttonType='Success' buttonClicked={this.orderHandler}>ORDER</Button>
-                </form>
+            <form onSubmit={this.orderHandler}>
+                {formElementsArray.map((item) => {
+                    return <Input key={item.id} label={item.setup.label} value={item.setup.value} elementConfig={item.setup.elementConfig} changed={(event) => this.inputChangedHandler(event, item.id)} />
+                })}
+                <Button buttonType='Success'>ORDER</Button>
+            </form>
         );
 
         if(this.state.isLoading) {
