@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom'
-import Layout from './Layout/Layout';
-import BurgerBuilder from '../containers/BurgerBuilder/BurgerBuilder'
-import Checkout from '../containers/Checkout/Checkout'
-import OrderHistory from '../containers/OrderHistory/OrderHistory'
+import Layout from './containers/Layout/Layout';
+import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder'
+import Checkout from './containers/Checkout/Checkout'
+import OrderHistory from './containers/OrderHistory/OrderHistory'
 
 class App extends Component {
   render() {
