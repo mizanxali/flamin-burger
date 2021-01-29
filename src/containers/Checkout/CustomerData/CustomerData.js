@@ -5,6 +5,7 @@ import router from '../../../axios-orders'
 import Spinner from '../../../components/UI/Spinner/Spinner'
 import { withRouter } from 'react-router'
 import Input from '../../../components/UI/Input/Input'
+import { connect } from 'react-redux'
 
 class CustomerData extends Component {
     state = {
@@ -170,4 +171,11 @@ class CustomerData extends Component {
     }
 }
 
-export default withRouter(CustomerData)
+const mapStateToProps = (state) => {
+    return {
+        ingredients: state.ingredients,
+        totalAmount: state.totalAmount
+    }
+}
+
+export default connect(mapStateToProps)(withRouter(CustomerData))
