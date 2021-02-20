@@ -3,9 +3,10 @@ import Button from '../../../components/UI/Button/Button'
 import './CustomerData.css'
 import router from '../../../axios-orders'
 import Spinner from '../../../components/UI/Spinner/Spinner'
-import { withRouter } from 'react-router'
 import Input from '../../../components/UI/Input/Input'
 import { connect } from 'react-redux'
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler'
+import * as orderActions from '../../../store/actions/index'
 
 class CustomerData extends Component {
     state = {
@@ -77,13 +78,11 @@ class CustomerData extends Component {
                 isTouched: false
             }
         },
-        isFormValid: false,
-        isLoading: false
+        isFormValid: false
     }
 
     orderHandler = (event) => {
         event.preventDefault(); //to stop button from reloading the page on being clicked
-        this.setState({isLoading: true});
         const customerData = {}
         for(let key in this.state.orderForm) {
             customerData[key] = this.state.orderForm[key].value
@@ -93,17 +92,7 @@ class CustomerData extends Component {
             totalAmount: this.props.totalAmount,
             customerData: customerData
         }
-        //send the finalOrder object to our Firebase database
-        router.post('/orders.json', finalOrder)
-        .then(res => {
-            console.log(res);
-            this.setState({isLoading: false});
-            this.props.history.push('/');
-        })
-        .catch(err => {
-            console.log(err);
-            this.setState({isLoading: false});
-        });
+        this.props.onPurchaseBurger(finalOrder)
     }
 
     checkValidation = (value, rules) => {
@@ -158,7 +147,7 @@ class CustomerData extends Component {
             </form>
         );
 
-        if(this.state.isLoading) {
+        if(this.props.loading) {
             form = <Spinner />
         }
 
@@ -173,9 +162,16 @@ class CustomerData extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        ingredients: state.ingredients,
-        totalAmount: state.totalAmount
+        ingredients: state.burgerBuilder.ingredients,
+        totalAmount: state.order.totalAmount,
+        loading: state.order.loading
     }
 }
 
-export default connect(mapStateToProps)(withRouter(CustomerData))
+const mapDispatchToProps = dispatch => {
+    return {
+        onPurchaseBurger: (orderData) => dispatch(orderActions.purchaseBurger(orderData))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(CustomerData, router))
