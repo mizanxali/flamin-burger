@@ -163,7 +163,7 @@ class CustomerData extends Component {
 const mapStateToProps = (state) => {
     return {
         ingredients: state.burgerBuilder.ingredients,
-        totalAmount: state.order.totalAmount,
+        totalAmount: state.burgerBuilder.totalAmount,
         loading: state.order.loading
     }
 }
