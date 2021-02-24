@@ -2,38 +2,44 @@ import React, { Component } from 'react'
 import router from '../../axios-orders';
 import Order from '../../components/Order/Order'
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler'
+import { connect } from 'react-redux'
+import * as actions from '../../store/actions'
+import Spinner from '../../components/UI/Spinner/Spinner'
 
 class OrderHistory extends Component {
-    state = {
-        orders: [],
-        isLoading: true
-    }
 
     componentDidMount() {
-        router.get('/orders.json')
-        .then(res => {
-            const retrievedOrders = [];
-            for(let firebaseObjectID in res.data) {
-                retrievedOrders.push({
-                    ...res.data[firebaseObjectID],
-                    orderID: firebaseObjectID
-                });
-            }
-            this.setState({isLoading: false, orders: retrievedOrders});
-        })
-        .catch(err => {
-            this.setState({isLoading: false})
-        })
+        this.props.onFetchOrders()
     }
+
     render() {
-        return(
-            <div>
-                {this.state.orders.map(order => {
+        let orders = <Spinner />
+        if(!this.props.loading) {
+            orders = (
+                this.props.orders.map(order => {
                     return <Order key={order.orderID} ingredients={order.ingredients} totalAmount={order.totalAmount} />
-                })}
+                })
+            )
+        }
+        return (
+            <div>
+                {orders}
             </div>
-        );
+        )
     }
 }
 
-export default withErrorHandler(OrderHistory, router)
+const mapStateToProps = state => {
+    return {
+        orders: state.order.orders,
+        loading: state.order.loading
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onFetchOrders: () => dispatch(actions.fetchOrders())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(OrderHistory, router))

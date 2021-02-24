@@ -44,3 +44,47 @@ export const purchaseInit = () => {
         type: actionTypes.PURCHASE_INIT
     }
 }
+
+export const fetchOrdersSuccess = (orders) => {
+    return {
+        type: actionTypes.FETCH_ORDERS_SUCCESS,
+        payload: {
+            orders: orders
+        }
+    }
+}
+
+export const fetchOrdersFailure = (error) => {
+    return {
+        type: actionTypes.FETCH_ORDERS_FAILURE,
+        payload: {
+            error: error
+        }
+    }
+}
+
+export const fetchOrdersStart = () => {
+    return {
+        type: actionTypes.FETCH_ORDERS_START
+    }
+}
+
+export const fetchOrders = () => {
+    return dispatch => {
+        dispatch(fetchOrdersStart())
+        router.get('/orders.json')
+        .then(res => {
+            const retrievedOrders = [];
+            for(let firebaseObjectID in res.data) {
+                retrievedOrders.push({
+                    ...res.data[firebaseObjectID],
+                    orderID: firebaseObjectID
+                });
+            }
+            dispatch(fetchOrdersSuccess(retrievedOrders))
+        })
+        .catch(err => {
+            dispatch(fetchOrdersFailure(err))
+        })
+    }
+}
