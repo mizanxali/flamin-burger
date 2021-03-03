@@ -69,10 +69,10 @@ export const fetchOrdersStart = () => {
     }
 }
 
-export const fetchOrders = (token) => {
+export const fetchOrders = (token, userId) => {
     return dispatch => {
         dispatch(fetchOrdersStart())
-        router.get(`/orders.json?auth=${token}`)
+        router.get(`/orders.json?auth=${token}&orderBy="userId"&equalTo="${userId}"`)
         .then(res => {
             const retrievedOrders = [];
             for(let firebaseObjectID in res.data) {

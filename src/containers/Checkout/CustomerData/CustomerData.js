@@ -90,7 +90,8 @@ class CustomerData extends Component {
         const finalOrder = {
             ingredients: this.props.ingredients,
             totalAmount: this.props.totalAmount,
-            customerData: customerData
+            customerData: customerData,
+            userId: this.props.userId
         }
         this.props.onPurchaseBurger(finalOrder, this.props.token)
     }
@@ -165,7 +166,8 @@ const mapStateToProps = (state) => {
         ingredients: state.burgerBuilder.ingredients,
         totalAmount: state.burgerBuilder.totalAmount,
         loading: state.order.loading,
-        token: state.auth.token
+        token: state.auth.token,
+        userId: state.auth.userId
     }
 }
 
