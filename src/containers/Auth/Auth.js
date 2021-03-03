@@ -39,7 +39,6 @@ class Auth extends Component {
             }
         },
         isSignUp: true
-        // isFormValid: false
     }
 
     checkValidation = (value, rules) => {
@@ -65,14 +64,8 @@ class Auth extends Component {
         updatedControlName.isTouched = true
         updatedControls[controlName] = updatedControlName
 
-        // let isFormValid = true
-        // for(let item in updatedControls) {
-        //     isFormValid = updatedControls[item].isValid && isFormValid
-        // }
-
         this.setState({
             controls: updatedControls
-            // isFormValid: isFormValid
         })
     }
 

@@ -8,10 +8,6 @@ class Modal extends Component {
         return nextProps.show !== this.props.show || nextProps.children !== this.props.children //rerender the Modal, and, consequently, the wrapped OrderSummary component only if the show prop changes or the modal content changes (to the spinner or back)
     }
 
-    componentDidUpdate() {
-        // console.log('Modal did update');
-    }
-
     render() {
         return (
             <Aux>
