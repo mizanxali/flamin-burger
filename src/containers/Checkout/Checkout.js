@@ -11,7 +11,10 @@ class Checkout extends Component {
     }
 
     checkoutConfirmedHandler = () => {
-        this.props.history.replace('checkout/cust-data');
+        if(this.props.isAuthenticated)
+            this.props.history.replace('checkout/cust-data');
+        else
+            this.props.history.replace('/auth');
     }
     
     render() {
@@ -21,7 +24,7 @@ class Checkout extends Component {
             const purchasedRedirect = this.props.purchased ? <Redirect to='/' /> : null
             summary = (<div>
                 {purchasedRedirect}
-                <CheckoutSummary ingredients={this.props.ingredients} checkoutCanceled={this.checkoutCanceledHandler} checkoutConfirmed={this.checkoutConfirmedHandler} />
+                <CheckoutSummary isAuth={this.props.isAuthenticated} ingredients={this.props.ingredients} checkoutCanceled={this.checkoutCanceledHandler} checkoutConfirmed={this.checkoutConfirmedHandler} />
                 <Route path={this.props.match.url + '/cust-data'} component={CustomerData} />
                 </div>)
         }
@@ -32,7 +35,8 @@ class Checkout extends Component {
 const mapStateToProps = (state) => {
     return {
         ingredients: state.burgerBuilder.ingredients,
-        purchased: state.order.purchased
+        purchased: state.order.purchased,
+        isAuthenticated: state.auth.token!==null
     }
 }
 

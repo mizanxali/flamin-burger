@@ -21,11 +21,6 @@ class BurgerBuilder extends Component {
     }
 
     componentDidMount() {
-        // router.get('https://burger-king-ed0a0-default-rtdb.firebaseio.com/ingredient-prices.json')
-        // .then(res => {
-        //     ingredientPrices = res.data;
-        // })
-
         this.props.onIngredientsInit()
     }
 
