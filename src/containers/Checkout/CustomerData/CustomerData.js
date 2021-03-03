@@ -92,7 +92,7 @@ class CustomerData extends Component {
             totalAmount: this.props.totalAmount,
             customerData: customerData
         }
-        this.props.onPurchaseBurger(finalOrder)
+        this.props.onPurchaseBurger(finalOrder, this.props.token)
     }
 
     checkValidation = (value, rules) => {
@@ -164,13 +164,14 @@ const mapStateToProps = (state) => {
     return {
         ingredients: state.burgerBuilder.ingredients,
         totalAmount: state.burgerBuilder.totalAmount,
-        loading: state.order.loading
+        loading: state.order.loading,
+        token: state.auth.token
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onPurchaseBurger: (orderData) => dispatch(orderActions.purchaseBurger(orderData))
+        onPurchaseBurger: (orderData, token) => dispatch(orderActions.purchaseBurger(orderData, token))
     }
 }
 

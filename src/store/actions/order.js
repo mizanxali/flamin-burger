@@ -26,10 +26,10 @@ export const purchaseBurgerStart = () => {
     }
 }
 
-export const purchaseBurger = (orderData) => {
+export const purchaseBurger = (orderData, token) => {
     return dispatch => {
         dispatch(purchaseBurgerStart())
-        router.post('/orders.json', orderData)
+        router.post(`/orders.json?auth=${token}`, orderData)
         .then(res => {
             dispatch(purchaseBurgerSuccess(res.data.name, orderData))
         })
@@ -69,10 +69,10 @@ export const fetchOrdersStart = () => {
     }
 }
 
-export const fetchOrders = () => {
+export const fetchOrders = (token) => {
     return dispatch => {
         dispatch(fetchOrdersStart())
-        router.get('/orders.json')
+        router.get(`/orders.json?auth=${token}`)
         .then(res => {
             const retrievedOrders = [];
             for(let firebaseObjectID in res.data) {
