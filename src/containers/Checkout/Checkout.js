@@ -14,7 +14,7 @@ class Checkout extends Component {
         if(this.props.isAuthenticated)
             this.props.history.replace('checkout/cust-data');
         else
-            this.props.history.replace('/auth');
+            this.props.history.replace('auth');
     }
     
     render() {

@@ -45,7 +45,7 @@ class BurgerBuilder extends Component {
 
     purchaseConfirmedHandler = () => {
         this.props.onPurchaseInit()
-        this.props.history.push('/checkout')
+        this.props.history.push('checkout')
     }
 
     render() {
