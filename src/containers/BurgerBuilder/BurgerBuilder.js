@@ -12,7 +12,7 @@ import * as actions from '../../store/actions'
 
 // let ingredientPrices = null;
 
-class BurgerBuilder extends Component {
+export class BurgerBuilder extends Component {
     constructor(props) {
         super(props);
         this.state = {
